@@ -22,19 +22,50 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// add Mapping Context
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
 	
 	
 }
 
 //Move Forward function
-void AShooterCharacter::MoveForward(const FInputActionValue &Value)
+void AShooterCharacter::Move(const FInputActionValue &Value)
 {
+	 FVector2D DirectionValue = Value.Get<FVector2D>();
+	//FVector DeltaLocation(0.f);
+	//DeltaLocation.X = DirectionValue * Speed * UGameplayStatics::GetWorldDeltaSeconds(this);
+	
+	const FVector Forward = GetActorForwardVector();
+	const FVector Right = GetActorRightVector();
 
+	if (Controller != nullptr)
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		
+
+		AddMovementInput(Forward, DirectionValue.Y);
+		AddMovementInput(Right, DirectionValue.X);
+	}
 }
 
 //Look Up Function
-void AShooterCharacter::LookUp(const FInputActionValue &Value)
+void AShooterCharacter::Look(const FInputActionValue &Value)
 {
+	FVector2D DirectionValue = Value.Get<FVector2D>();
+	if (Controller != nullptr)
+	{
+		// add yaw and pitch input to controller
+		AddControllerYawInput(DirectionValue.X);
+		AddControllerPitchInput(DirectionValue.Y);
+	}
 }
 
 // Called every frame
@@ -51,7 +82,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		
+		EnhancedInputComponent->BindAction(ActionMove, ETriggerEvent::Triggered, this, &AShooterCharacter::Move);
+		EnhancedInputComponent->BindAction(ActionLook, ETriggerEvent::Triggered, this, &AShooterCharacter::Look);
 	}
 
 }
