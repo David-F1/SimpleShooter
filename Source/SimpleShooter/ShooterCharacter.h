@@ -8,6 +8,8 @@
 
 
 
+class USpringArmComponent;
+class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -25,6 +27,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	USpringArmComponent* CameraBoom;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UCameraComponent* FollowCamera;
 
 	// To add declare Input actions
 
@@ -63,5 +71,11 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	/** Returns CameraBoom subObject */
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const {return CameraBoom; }
+
+	/** Returns FollowCamera SubO */
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const{return FollowCamera;}
 
 };
