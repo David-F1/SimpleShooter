@@ -39,6 +39,9 @@ protected:
 		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		UInputAction* FireAction;
 
+		UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		UInputAction* JumpAction;
+
 private:
 
 		/**Mapping context */
@@ -47,6 +50,7 @@ private:
 
 		void Move(const FInputActionValue& Value);
 		void Look(const FInputActionValue& Value);
+		
 
 		/** variables declaration */
 		UPROPERTY(EditAnyWhere, Category = "Movement", meta = (AllowPrivateAccess = "true"))
